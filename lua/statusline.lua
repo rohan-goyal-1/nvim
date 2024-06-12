@@ -1,8 +1,8 @@
 vim.cmd('hi ActiveBuffer term=underline cterm=underline ctermfg=none ctermbg=none')   
 
 function set_status(args)
-   local buffs = {}
-   local no_list_buffs = {['']=true, ['[Command Line]']=true}
+    local buffs = {}
+    local no_list_buffs = {['']=true, ['[Command Line]']=true}
     for _,v in pairs(vim.fn.getbufinfo({buflisted=1})) do
         local fname = vim.fn.fnamemodify(v.name, ":t")
         if(not no_list_buffs[fname]) then 
@@ -16,8 +16,8 @@ function set_status(args)
 end
 
 vim.api.nvim_create_autocmd({'BufEnter'},
- { 
-            group = vim.api.nvim_create_augroup('BufStatusLine', {}), 
-            callback = set_status 
- })
+{ 
+    group = vim.api.nvim_create_augroup('BufStatusLine', {}), 
+    callback = set_status 
+})
 
