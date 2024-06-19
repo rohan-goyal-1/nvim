@@ -61,8 +61,6 @@ let mapleader = " "
 " general mappings
 map j gj
 map k gk
-vmap <C-c> "+y
-nmap <C-c> "+yy
 map <leader>e :Explore<CR>
 map <leader>s :buffers<CR>
 map <Tab> :bn<CR>
