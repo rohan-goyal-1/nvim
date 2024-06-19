@@ -21,17 +21,7 @@ lua require("lspconfig").pylsp.setup{}
 
 lua require("nvim-autopairs").setup{}
 
-" autocommands
-function! StopLSP()
-    let l:cwd = getcwd()[0:32]
-    let l:target_dir = '/Users/RamitRohanGoyal/Desktop/CP'
-    if match(cwd, target_dir) == 0
-        LspStop
-    endif
-endfunction
-
 autocmd VimEnter * if argc() == 0 | execute 'lua require("telescope.builtin").find_files()' | endif
-autocmd VimEnter * call StopLSP()
 
 " Comment config
 lua require('Comment').setup()
