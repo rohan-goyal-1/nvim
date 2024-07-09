@@ -12,23 +12,24 @@ Plug 'numToStr/Comment.nvim'
 Plug 'windwp/nvim-autopairs'
 Plug 'nvim-lualine/lualine.nvim'
 Plug 'nvim-tree/nvim-web-devicons'
+Plug 'lukas-reineke/indent-blankline.nvim'
+Plug 'ntpeters/vim-better-whitespace'
 
 call plug#end()
 
-lua require('lualine').setup()
-
-" LSP config
+lua require("lualine").setup()
+lua require("ibl").setup()
 lua require("mason").setup{}
 lua require("mason-lspconfig").setup{}
 lua require("lspconfig").clangd.setup{}
 lua require("lspconfig").pylsp.setup{}
+lua require("Comment").setup()
+lua require("nvim-autopairs").setup()
+lua require("todo-comments").setup()
 
-" Comment config
-lua require('Comment').setup()
-
-lua require("nvim-autopairs").setup{}
-
-lua require("todo-comments").setup{}
+highlight ExtraWhitespace ctermbg=cyan guibg=cyan
+autocmd ColorScheme * highlight ExtraWhitespace ctermbg=cyan guibg=cyan
+match ExtraWhitespace /\s\+$/
 
 autocmd VimEnter * if argc() == 0 | execute 'lua require("telescope.builtin").find_files()' | endif
 
@@ -40,20 +41,12 @@ highlight Normal guibg=NONE ctermbg=NONE
 highlight StatusLine ctermfg=white ctermbg=NONE guifg=#ffffff guibg=NONE
 highlight StatusLineNC ctermfg=grey ctermbg=NONE guifg=#808080 guibg=NONE
 
-" Customize the status line content
-set statusline=
-set statusline+=%f       " File name
-set statusline+=%h       " Help file flag
-set statusline+=%m       " Modified flag
-set statusline+=%r       " Readonly flag
-set statusline+=%=       " Right align the remaining items
-set statusline+=\ %p%%   " File position percentage
-set statusline+=\ %l:%c  " Line and column number
-set laststatus=2
-
+" cursorline
 set cursorline
+highlight CursorLine cterm=underline gui=underline
+
 set clipboard=unnamedplus
-set number
+set relativenumber number
 set scrolloff=10
 set tabstop=4
 set shiftwidth=4
@@ -76,8 +69,10 @@ map <leader>d :<C-u>bd<CR>
 nmap <leader>O O<Esc>
 nmap <leader>o o<Esc>
 map <Esc> :<C-u>noh <CR>
-map <S-Up> :m-2 <CR>
-map <S-Down> :m+1 <CR>
+nmap <S-Up> :m-2 <CR>
+nmap <S-Down> :m+1 <CR>
+vmap <S-Up> :m '<-2<CR>gv=gv
+vmap <S-Down> :m '>+1<CR>gv=gv
 vmap p "_dP
 map <C-j> <C-W>j
 map <C-k> <C-W>k
@@ -85,6 +80,9 @@ map <C-l> <C-W>l
 map <C-h> <C-W>h
 map <leader>V :vsp<CR>
 map <leader>H :sp<CR>
+map <leader>w :StripWhitespace<CR>
+nmap gd :lua vim.lsp.buf.definition()<CR>
+nmap K :lua vim.lsp.buf.hover()<CR>
 
 " Misc plugin mappings
 nmap <leader>t :TodoLocList<CR>
