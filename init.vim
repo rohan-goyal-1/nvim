@@ -1,6 +1,5 @@
 call plug#begin()
 
-Plug 'nvim-lua/plenary.nvim'
 Plug 'ThePrimeagen/harpoon'
 Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.6' }
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
@@ -17,19 +16,25 @@ Plug 'ntpeters/vim-better-whitespace'
 
 call plug#end()
 
-lua require("lualine").setup()
+lua require("lualine").setup{ options = { theme = 'auto' } }
 lua require("ibl").setup()
 lua require("mason").setup{}
 lua require("mason-lspconfig").setup{}
-lua require("lspconfig").clangd.setup{}
-lua require("lspconfig").pylsp.setup{}
+" lua require("lspconfig").clangd.setup{}
+" lua require("lspconfig").pylsp.setup{}
 lua require("Comment").setup()
 lua require("nvim-autopairs").setup()
 lua require("todo-comments").setup()
 
-highlight ExtraWhitespace ctermbg=cyan guibg=cyan
-autocmd ColorScheme * highlight ExtraWhitespace ctermbg=cyan guibg=cyan
-match ExtraWhitespace /\s\+$/
+" whitespace plugin
+let g:better_whitespace_enabled=1
+augroup Whitespace
+    autocmd!
+    autocmd InsertEnter * DisableWhitespace
+    autocmd InsertLeave * EnableWhitespace
+augroup END
+let g:better_whitespace_ctermcolor='cyan'
+let g:better_whitespace_guicolor='cyan'
 
 autocmd VimEnter * if argc() == 0 | execute 'lua require("telescope.builtin").find_files()' | endif
 
@@ -43,7 +48,7 @@ highlight StatusLineNC ctermfg=grey ctermbg=NONE guifg=#808080 guibg=NONE
 
 " cursorline
 set cursorline
-highlight CursorLine cterm=underline gui=underline
+highlight CursorLine cterm=underline gui=underline cterm=underline ctermbg=none guibg=none
 
 set clipboard=unnamedplus
 set relativenumber number
@@ -66,11 +71,14 @@ map <leader>s :<C-u>buffers<CR>
 map <Tab> :<C-u>bn<CR>
 map <S-Tab> :<C-u>bp<CR>
 map <leader>d :<C-u>bd<CR>
+map <leader>b :<C-u>enew<CR>
 nmap <leader>O O<Esc>
+nmap < V<
+nmap > V>
 nmap <leader>o o<Esc>
 map <Esc> :<C-u>noh <CR>
-nmap <S-Up> :m-2 <CR>
-nmap <S-Down> :m+1 <CR>
+nmap <S-Up> V:m-2 <CR>
+nmap <S-Down> V:m+1 <CR>
 vmap <S-Up> :m '<-2<CR>gv=gv
 vmap <S-Down> :m '>+1<CR>gv=gv
 vmap p "_dP
@@ -81,6 +89,9 @@ map <C-h> <C-W>h
 map <leader>V :vsp<CR>
 map <leader>H :sp<CR>
 map <leader>w :StripWhitespace<CR>
+command W w
+vmap > >gv
+vmap < <gv
 nmap gd :lua vim.lsp.buf.definition()<CR>
 nmap K :lua vim.lsp.buf.hover()<CR>
 
@@ -92,6 +103,7 @@ map <leader>E :lua vim.diagnostic.open_float()<CR>
 
 " Telescope mappings
 nmap <leader>ff :Telescope find_files<CR>
+nmap <leader>fa :lua require('telescope.builtin').find_files({ cwd = vim.fn.expand('~/Desktop/CP/util/algo') })<CR>
 nmap <leader>fw :Telescope live_grep<CR>
 nmap <leader>fb :Telescope buffers<CR>
 nmap <leader>fh :Telescope help_tags<CR>
